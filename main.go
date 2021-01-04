@@ -16,36 +16,43 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tag, err := FindLatestSemverTag(repo)
-
-	fmt.Println("Latest semver tag found on current branch: ", tag)
-
 	wt, err := repo.Worktree()
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	status, err := wt.Status()
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	if status.IsClean() {
 		log.Println("Directory is clean")
 	} else {
-		log.Println("Non committed sources exist")
+		log.Fatal("Directory is dirty")
 	}
+
+	tag, htag, err := FindLatestSemverTag(repo)
+	fmt.Println("Latest semver tag found on current branch: ", tag)
+
+	head, err := repo.Head()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if htag.String() == head.Hash().String() {
+		log.Fatal("Head is already tagged with semver tag ", tag)
+	}
+
 }
 
 // FindLatestSemverTag returns the latest semver tag found on current branch
-// returns "",nil if no tag can be found
-func FindLatestSemverTag(repo *git.Repository) (string, error) {
+// returns "","", nil if no tag can be found
+func FindLatestSemverTag(repo *git.Repository) (string, plumbing.Hash, error) {
 	tagList := make(map[plumbing.Hash]string)
 	/* Get all tags indexed by hash */
 
 	tags, err := repo.Tags()
 	if err != nil {
-		return "", err
+		return "", plumbing.ZeroHash, err
 	}
 
 	for ref, err := tags.Next(); err == nil; ref, err = tags.Next() {
@@ -56,7 +63,7 @@ func FindLatestSemverTag(repo *git.Repository) (string, error) {
 
 	iter, err := repo.Log(&git.LogOptions{})
 	if err != nil {
-		return "", err
+		return "", plumbing.ZeroHash, err
 	}
 	defer iter.Close()
 
@@ -65,9 +72,9 @@ func FindLatestSemverTag(repo *git.Repository) (string, error) {
 		if found {
 			_, err := semver.NewVersion(tag)
 			if err == nil {
-				return tag, nil
+				return tag, ref.Hash, nil
 			}
 		}
 	}
-	return "", nil
+	return "", plumbing.ZeroHash, nil
 }
