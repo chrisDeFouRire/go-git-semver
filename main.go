@@ -29,9 +29,14 @@ func main() {
 	}
 	*/
 
+	head, err := repo.Head()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	refs, _ := repo.References()
 	refs.ForEach(func(ref *plumbing.Reference) error {
-		if ref.Type() == plumbing.HashReference {
+		if ref.Type() == plumbing.HashReference && ref.Hash() == head.Hash() {
 			fmt.Println(ref)
 			fmt.Println(ref.Name().Short())
 		}
