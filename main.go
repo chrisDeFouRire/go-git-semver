@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/Masterminds/semver"
@@ -15,15 +16,21 @@ func main() {
 		log.Fatal(err)
 	}
 
+	tag, err := FindLatestSemverTag(repo)
+
+	fmt.Println("Latest semver tag found on current branch: ", tag)
+
 }
 
-func FindLatestSemverTag(repo *git.Repository) string {
+// FindLatestSemverTag returns the latest semver tag found on current branch
+// returns "",nil if no tag can be found
+func FindLatestSemverTag(repo *git.Repository) (string, error) {
 	tagList := make(map[plumbing.Hash]string)
 	/* Get all tags indexed by hash */
 
 	tags, err := repo.Tags()
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	for ref, err := tags.Next(); err == nil; ref, err = tags.Next() {
@@ -34,7 +41,7 @@ func FindLatestSemverTag(repo *git.Repository) string {
 
 	iter, err := repo.Log(&git.LogOptions{})
 	if err != nil {
-		return nil
+		return "", err
 	}
 	defer iter.Close()
 
@@ -43,9 +50,9 @@ func FindLatestSemverTag(repo *git.Repository) string {
 		if found {
 			_, err := semver.NewVersion(tag)
 			if err == nil {
-				return tag
+				return tag, nil
 			}
 		}
 	}
-
+	return "", nil
 }
