@@ -10,6 +10,69 @@ import (
 	"github.com/go-git/go-git/v5/plumbing"
 )
 
+const (
+	// SemverMajor represents the major part of a semver
+	SemverMajor = iota
+	// SemverMinor represents the minor part of a semver
+	SemverMinor
+	// SemverPatch represents the patch part of a semver
+	SemverPatch
+	// SemverRest represents the rest part of a semver
+	SemverRest
+)
+
+// Version represents a semver version
+type Version struct {
+	Major int
+	Minor int
+	Patch int
+	Rest  string
+}
+
+// NewVersion returns the version corresponding to the tag, or an error
+func NewVersion(tag string) (*Version, error) {
+	found := re.FindSubmatch([]byte(tag))
+	if found == nil || len(found) != 5 {
+		return nil, ErrNotSemver
+	}
+	major, err := strconv.Atoi(string(found[1]))
+	if err != nil {
+		return nil, ErrCantParseNumber
+	}
+	minor, err := strconv.Atoi(string(found[2]))
+	if err != nil {
+		return nil, ErrCantParseNumber
+	}
+	patch, err := strconv.Atoi(string(found[3]))
+	if err != nil {
+		return nil, ErrCantParseNumber
+	}
+
+	return &Version{major, minor, patch, string(found[4])}, nil
+}
+
+// String returns a string representation
+func (v Version) String() string {
+	if v.Rest == "" {
+		return fmt.Sprintf("v%d.%d.%d", v.Major, v.Minor, v.Patch)
+	}
+	return fmt.Sprintf("v%d.%d.%d-%s", v.Major, v.Minor, v.Patch, v.Rest)
+}
+
+// Inc increases one field and returns a new Version
+func (v Version) Inc(field int) Version {
+	switch field {
+	case SemverMajor:
+		return Version{v.Major + 1, 0, 0, ""}
+	case SemverMinor:
+		return Version{v.Major, v.Minor + 1, 0, ""}
+	case SemverPatch:
+		return Version{v.Major, v.Minor, v.Patch + 1, ""}
+	default:
+		return Version{}
+	}
+}
+
 var (
 	// ErrNotSemver if a tag can't be parsed as a semantic versioning tag
 	ErrNotSemver = fmt.Errorf("Tag is not SEMVER")
@@ -28,9 +91,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	/* Get all tags by hash */
+	/* Get all tags indexed by hash */
 
-	log.Println(">> find TAGS ")
+	//log.Println(">> find TAGS ")
 	tags, err := repo.Tags()
 	if err != nil {
 		log.Fatal(err)
@@ -42,40 +105,20 @@ func main() {
 		tagList[ref.Hash()] = tagName
 	}
 
-	log.Println(">> Inspect log")
-
+	//log.Println(">> Inspect log")
 	iter, err := repo.Log(&git.LogOptions{})
+	defer iter.Close()
+
 	for ref, err := iter.Next(); err == nil; ref, err = iter.Next() {
 		tag, found := tagList[ref.Hash]
 		if found {
-			major, minor, patch, rest, err := tag2Semver(tag)
+			v, err := NewVersion(tag)
 
 			if err == nil {
-				log.Printf("Version %d.%d.%d-%s", major, minor, patch, rest)
+				log.Print("Version ", v)
 				break
 			}
 		}
 	}
 
-}
-
-func tag2Semver(tag string) (int, int, int, string, error) {
-	found := re.FindSubmatch([]byte(tag))
-	if found == nil {
-		return 0, 0, 0, "", ErrNotSemver
-	}
-	major, err := strconv.Atoi(string(found[1]))
-	if err != nil {
-		return 0, 0, 0, "", ErrCantParseNumber
-	}
-	minor, err := strconv.Atoi(string(found[2]))
-	if err != nil {
-		return 0, 0, 0, "", ErrCantParseNumber
-	}
-	patch, err := strconv.Atoi(string(found[3]))
-	if err != nil {
-		return 0, 0, 0, "", ErrCantParseNumber
-	}
-
-	return major, minor, patch, string(found[4]), nil
 }
