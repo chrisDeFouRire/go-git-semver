@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 )
 
 func main() {
@@ -12,6 +14,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	/* Get all tags
 
 	tags, err := repo.Tags()
 	if err != nil {
@@ -23,4 +27,15 @@ func main() {
 		tagName := ref.Name().Short()
 		log.Print(tagName)
 	}
+	*/
+
+	refs, _ := repo.References()
+	refs.ForEach(func(ref *plumbing.Reference) error {
+		if ref.Type() == plumbing.HashReference {
+			fmt.Println(ref)
+			fmt.Println(ref.Name().Short())
+		}
+
+		return nil
+	})
 }
