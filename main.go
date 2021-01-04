@@ -20,6 +20,21 @@ func main() {
 
 	fmt.Println("Latest semver tag found on current branch: ", tag)
 
+	wt, err := repo.Worktree()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	status, err := wt.Status()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if status.IsClean() {
+		log.Println("Directory is clean")
+	} else {
+		log.Println("Non committed sources exist")
+	}
 }
 
 // FindLatestSemverTag returns the latest semver tag found on current branch
