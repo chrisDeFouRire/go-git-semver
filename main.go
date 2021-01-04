@@ -19,7 +19,8 @@ func main() {
 	}
 	defer tags.Close()
 
-	for ref, err := tags.Next(); err == nil; {
-		log.Print(ref.Name().String())
+	for ref, err := tags.Next(); err == nil; ref, err = tags.Next() {
+		tagName := ref.Name().Short()
+		log.Print(tagName)
 	}
 }
