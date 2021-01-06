@@ -11,7 +11,8 @@ import (
 )
 
 var cfgFile string
-var quiet bool
+
+//var quiet bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -40,7 +41,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gitv.yaml)")
-	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet, don't warn if dirty folder")
+	//rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet, don't warn if dirty folder")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.

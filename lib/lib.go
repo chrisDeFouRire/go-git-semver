@@ -16,23 +16,18 @@ func DirtyFolder(repo *git.Repository) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if status.IsClean() {
-		return false, nil
-	} else {
-		return true, nil
-	}
-
+	return !status.IsClean(), nil
 }
 
 // FindLatestSemverTag returns the latest semver tag found on current branch
 // returns "","", nil if no tag can be found
-func FindLatestSemverTag(repo *git.Repository) (string, plumbing.Hash, error) {
+func FindLatestSemverTag(repo *git.Repository) (string, plumbing.Hash, *semver.Version, error) {
 	tagList := make(map[plumbing.Hash]string)
 	/* Get all tags indexed by hash */
 
 	tags, err := repo.Tags()
 	if err != nil {
-		return "", plumbing.ZeroHash, err
+		return "", plumbing.ZeroHash, nil, err
 	}
 
 	for ref, err := tags.Next(); err == nil; ref, err = tags.Next() {
@@ -43,18 +38,18 @@ func FindLatestSemverTag(repo *git.Repository) (string, plumbing.Hash, error) {
 
 	iter, err := repo.Log(&git.LogOptions{})
 	if err != nil {
-		return "", plumbing.ZeroHash, err
+		return "", plumbing.ZeroHash, nil, err
 	}
 	defer iter.Close()
 
 	for ref, err := iter.Next(); err == nil; ref, err = iter.Next() {
 		tag, found := tagList[ref.Hash]
 		if found {
-			_, err := semver.NewVersion(tag)
+			version, err := semver.NewVersion(tag)
 			if err == nil {
-				return tag, ref.Hash, nil
+				return tag, ref.Hash, version, nil
 			}
 		}
 	}
-	return "", plumbing.ZeroHash, nil
+	return "", plumbing.ZeroHash, nil, nil
 }

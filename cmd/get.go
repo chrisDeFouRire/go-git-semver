@@ -10,6 +10,8 @@ import (
 	"github.com/chrisDeFouRire/gitv/lib"
 )
 
+var nov, nonl bool
+
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get",
@@ -21,21 +23,19 @@ var getCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		if !quiet {
-			dirty, err := lib.DirtyFolder(repo)
-			if err != nil {
-				log.Fatal(err)
-			}
-			if dirty {
-				log.Fatal("Directory is dirty, commit first")
-			}
-		}
-
-		tag, _, err := lib.FindLatestSemverTag(repo)
+		tag, _, _, err := lib.FindLatestSemverTag(repo)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(tag)
+		if !nonl {
+			defer fmt.Println()
+		}
+
+		if nov {
+			fmt.Print(tag[1:])
+			return
+		}
+		fmt.Print(tag)
 	},
 }
 
@@ -51,4 +51,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// getCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	getCmd.Flags().BoolVarP(&nov, "nov", "v", false, "Removes the prefix v letter")
+	getCmd.Flags().BoolVarP(&nonl, "nonl", "n", false, "Removes trailing newline character")
 }
