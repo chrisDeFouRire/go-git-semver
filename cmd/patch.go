@@ -5,17 +5,15 @@ import (
 	"log"
 	"os"
 
+	"github.com/Masterminds/semver"
 	"github.com/chrisDeFouRire/gitv/lib"
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 )
 
-// patchCmd represents the patch command
-var patchCmd = &cobra.Command{
-	Use:   "patch",
-	Short: "Bump the patch level",
-	Long:  `Bump the patch level`,
-	Run: func(cmd *cobra.Command, args []string) {
+func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
+
+	return func(*cobra.Command, []string) {
 		repo, err := git.PlainOpen(".")
 		if err != nil {
 			log.Fatal(err)
@@ -39,7 +37,7 @@ var patchCmd = &cobra.Command{
 			log.Fatalf("No need to bump, tag %s applies to HEAD", tag)
 		}
 
-		newVersion := v.IncPatch()
+		newVersion := bump(*v)
 		newTag := "v" + newVersion.String()
 		if nov {
 			newTag = newVersion.String()
@@ -62,7 +60,15 @@ var patchCmd = &cobra.Command{
 			}
 			os.Exit(-1)
 		}
-	},
+	}
+}
+
+// patchCmd represents the patch command
+var patchCmd = &cobra.Command{
+	Use:   "patch",
+	Short: "Bump the patch level",
+	Long:  `Bump the patch level`,
+	Run:   bumpRepoWithBumper(semver.Version.IncPatch),
 }
 
 func init() {
