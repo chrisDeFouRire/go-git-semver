@@ -47,11 +47,11 @@ var patchCmd = &cobra.Command{
 
 		ok := "n"
 		if !assumeYes {
-			fmt.Printf("Tag with %s? (Y/n)  ", newTag)
+			fmt.Printf("Tag with %s? (y/N)  ", newTag)
 			fmt.Fscan(os.Stdin, &ok)
 		}
-		if assumeYes || ok == "Y" {
-			ref, err := repo.CreateTag(newTag, head.Hash(), &git.CreateTagOptions{Message: newTag})
+		if assumeYes || ok == "y" {
+			ref, err := repo.CreateTag(newTag, head.Hash(), nil) // nil to create non annotated tag
 			if err != nil {
 				log.Fatal(err)
 			}
