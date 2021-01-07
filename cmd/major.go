@@ -1,24 +1,17 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/Masterminds/semver"
 	"github.com/spf13/cobra"
 )
 
 // majorCmd represents the major command
 var majorCmd = &cobra.Command{
 	Use:   "major",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Bump the minor level",
+	Long:  `Bump the minor level`,
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("major called")
-	},
+	Run: bumpRepoWithBumper(semver.Version.IncMajor),
 }
 
 func init() {
