@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/chrisDeFouRire/gitv/lib"
 	"github.com/go-git/go-git/v5"
@@ -24,16 +25,13 @@ var patchCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		if dirty {
+		if dirty && !quiet {
 			log.Fatal("Directory is dirty, commit first")
 		}
 
 		tag, hash, v, err := lib.FindLatestSemverTag(repo)
 		if err != nil {
 			log.Fatal(err)
-		}
-		if !nonl {
-			defer fmt.Println()
 		}
 
 		head, err := repo.Head()
@@ -43,8 +41,27 @@ var patchCmd = &cobra.Command{
 
 		newVersion := v.IncPatch()
 		newTag := "v" + newVersion.String()
-		log.Printf("Tagging with tag %s", newTag)
+		if nov {
+			newTag = newVersion.String()
+		}
 
+		ok := "n"
+		if !assumeYes {
+			fmt.Printf("Tag with %s? (Y/n)  ", newTag)
+			fmt.Fscan(os.Stdin, &ok)
+		}
+		if assumeYes || ok == "Y" {
+			ref, err := repo.CreateTag(newTag, head.Hash(), &git.CreateTagOptions{Message: newTag})
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("Tagged %s with tag %s\n", ref.String(), newTag)
+		} else {
+			if !quiet {
+				fmt.Println("Exit without tagging")
+			}
+			os.Exit(-1)
+		}
 	},
 }
 

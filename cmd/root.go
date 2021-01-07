@@ -10,9 +10,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-
-//var quiet bool
+var (
+	cfgFile   string
+	quiet     bool
+	assumeYes bool
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -41,8 +43,8 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gitv.yaml)")
-	//rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet, don't warn if dirty folder")
-
+	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet, don't warn if dirty folder")
+	rootCmd.Flags().BoolVarP(&assumeYes, "yes", "y", false, "Assume Yes answer")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

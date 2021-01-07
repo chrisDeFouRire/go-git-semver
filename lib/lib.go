@@ -1,6 +1,8 @@
 package lib
 
 import (
+	"log"
+
 	"github.com/Masterminds/semver"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
@@ -33,6 +35,9 @@ func FindLatestSemverTag(repo *git.Repository) (string, plumbing.Hash, *semver.V
 	for ref, err := tags.Next(); err == nil; ref, err = tags.Next() {
 		tagName := ref.Name().Short()
 		tagList[ref.Hash()] = tagName
+		log.Println(tagName, " = ", ref.Hash())
+		log.Println(ref.Strings())
+		log.Println(ref.Target())
 	}
 	tags.Close()
 
@@ -43,6 +48,7 @@ func FindLatestSemverTag(repo *git.Repository) (string, plumbing.Hash, *semver.V
 	defer iter.Close()
 
 	for ref, err := iter.Next(); err == nil; ref, err = iter.Next() {
+		log.Println("hash ", ref.Hash)
 		tag, found := tagList[ref.Hash]
 		if found {
 			version, err := semver.NewVersion(tag)
