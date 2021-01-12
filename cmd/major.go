@@ -8,8 +8,8 @@ import (
 // majorCmd represents the major command
 var majorCmd = &cobra.Command{
 	Use:   "major",
-	Short: "Bump the minor level",
-	Long:  `Bump the minor level`,
+	Short: "Bump the major level",
+	Long:  `Bump the major level`,
 
 	Run: bumpRepoWithBumper(semver.Version.IncMajor),
 }
