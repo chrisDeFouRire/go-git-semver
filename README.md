@@ -20,7 +20,7 @@ Git-semver is a CLI tool for easy SemVer versioning of your tags.
 
 ## Download and Install as a git plugin
 
-First grab a binary (Linux/MacOS) [release on github](https://github.com/chrisDeFouRire/go-git-semver/releases/tag/v0.3.0).
+First grab a binary (Linux/MacOS) [release on github](https://github.com/chrisDeFouRire/go-git-semver/releases/tag/v1.0.0-rc1).
 
 Extract it and simply copy `go-git-semver` to `git-semver` somewhere on your `$PATH` (if you know how to build and deploy on Windows, please submit an issue/pull request!).
 
