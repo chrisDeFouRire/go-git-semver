@@ -61,7 +61,11 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 			fmt.Fscan(os.Stdin, &ok)
 		}
 		if assumeYes || ok == "y" {
-			ref, err := repo.CreateTag(newTag, head.Hash(), nil) // nil to create non annotated tag
+			var opts *git.CreateTagOptions
+			if message != "" {
+				opts = &git.CreateTagOptions{Message: message}
+			}
+			ref, err := repo.CreateTag(newTag, head.Hash(), opts) // nil to create non annotated tag
 			if err != nil {
 				log.Fatal(err)
 			}

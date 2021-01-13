@@ -14,6 +14,7 @@ var (
 	cfgFile   string
 	force     bool
 	assumeYes bool
+	message   string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -41,6 +42,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gitv.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "force tag, don't warn if dirty folder or already tagged")
 	rootCmd.Flags().BoolVarP(&assumeYes, "yes", "y", false, "Assume Yes answer")
+	rootCmd.Flags().StringVarP(&message, "msg", "m", "", "message for annotated tag")
 }
 
 // initConfig reads in config file and ENV variables if set.
