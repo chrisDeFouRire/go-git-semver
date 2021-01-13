@@ -18,6 +18,8 @@ Git-semver is a CLI tool for easy SemVer versioning of your tags.
 
 `go-git-semver patch --prerelease=rc1 -m "sounds about right"` creates a prerelease tag (`-rc1`) with a message (annotated tag)
 
+`go-git-semver purge "<0.3-0"` removes all semver tags according to the semver spec. Interactive use only. This command uses `git` and pushes the tag deletion to "origin". Also, it's slow. Add `-0` to your spec to include prereleases. This command will show the tags about to be removed, and will ask for a confirmation.
+
 ## Download and Install as a git plugin
 
 First grab a binary (Linux/MacOS) [release on github](https://github.com/chrisDeFouRire/go-git-semver/releases/tag/v1.0.0-rc1).
