@@ -51,7 +51,7 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 		}
 		newVersion := bump(*v)
 		if prerelease != "" {
-			newVersion, err = newVersion.SetPrerelease(args[0])
+			newVersion, err = newVersion.SetPrerelease(prerelease)
 			if err != nil {
 				log.Fatal(err)
 			}
