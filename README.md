@@ -16,20 +16,23 @@ Git-semver is a CLI tool for easy SemVer versioning of your tags.
 
 `go-git-semver prerelease rc1 -m "sounds about right"` creates a prerelease tag (`-rc1`) with a message (annotated tag)
 
-## Install as a git plugin
+## Download and Install as a git plugin
 
-Simply copy go-git-semver to git-semver somewhere on your PATH.
+First grab a binary (Linux/MacOS/Windows) [release on github](https://github.com/chrisDeFouRire/go-git-semver/releases/tag/v0.3.0).
+
+Extract it and simply copy `go-git-semver` to `git-semver` somewhere on your `$PATH` (if you know how this works on Windows, please submit an issue/pull request!).
+
 ```
 sudo cp go-git-semver /usr/local/bin/git-semver
 ```
 
-Then `git semver get` will work.
+Then `git semver <command>` will work. For instance `git semver major` will tag with a major tag bump.
 
 ## License
 
 Apache 2.0, Copyright Chris Hartwig
 
-If you think I should have used another license, open an issue on github
+If you think I should have used another license, open an issue on github and lets talk about it.
 
 ## TODO
 
