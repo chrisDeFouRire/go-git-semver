@@ -1,4 +1,4 @@
-module github.com/chrisDeFouRire/gitv
+module github.com/chrisDeFouRire/go-git-semver
 
 go 1.13
 

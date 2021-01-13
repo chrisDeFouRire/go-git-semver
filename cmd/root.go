@@ -19,7 +19,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "gitv",
+	Use:   "go-git-semver",
 	Short: "Manage Semver tags easily in git",
 	Long:  `Manage Semver tags easily in git`,
 	// Uncomment the following line if your bare application
@@ -39,7 +39,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gitv.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.go-git-semver.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "force tag, don't warn if dirty folder or already tagged")
 	rootCmd.PersistentFlags().BoolVarP(&assumeYes, "yes", "y", false, "Assume Yes answer")
 	rootCmd.PersistentFlags().StringVarP(&message, "msg", "m", "", "message for annotated tag")
@@ -58,9 +58,9 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".gitv" (without extension).
+		// Search config in home directory with name ".go-git-semver" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".gitv")
+		viper.SetConfigName(".go-git-semver")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

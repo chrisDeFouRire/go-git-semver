@@ -7,7 +7,7 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 
-	"github.com/chrisDeFouRire/gitv/lib"
+	"github.com/chrisDeFouRire/go-git-semver/lib"
 )
 
 var nov, nonl bool

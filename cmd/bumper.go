@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/Masterminds/semver"
-	"github.com/chrisDeFouRire/gitv/lib"
+	"github.com/chrisDeFouRire/go-git-semver/lib"
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 )
