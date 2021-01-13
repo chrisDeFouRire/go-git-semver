@@ -35,7 +35,7 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 		}
 
 		head, err := repo.Head()
-		if hash.String() == head.Hash().String() {
+		if hash.String() == head.Hash().String() && !force {
 			log.Fatalf("No need to bump, tag %s applies to HEAD", tag)
 		}
 
