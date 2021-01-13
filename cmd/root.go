@@ -15,21 +15,23 @@ var (
 	force     bool
 	assumeYes bool
 	message   string
+
+	meta       string
+	prerelease string
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "go-git-semver",
+	Use:   "git-semver",
 	Short: "Manage Semver tags easily in git",
 	Long:  `Manage Semver tags easily in git`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(version string) {
+	rootCmd.Version = version
+
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -43,6 +45,9 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "force tag, don't warn if dirty folder or already tagged")
 	rootCmd.PersistentFlags().BoolVarP(&assumeYes, "yes", "y", false, "Assume Yes answer")
 	rootCmd.PersistentFlags().StringVarP(&message, "msg", "m", "", "message for annotated tag")
+
+	rootCmd.PersistentFlags().StringVar(&prerelease, "prerelease", "", "specify a prerelease suffix")
+	rootCmd.PersistentFlags().StringVar(&meta, "meta", "", "specify a metadata suffix")
 }
 
 // initConfig reads in config file and ENV variables if set.

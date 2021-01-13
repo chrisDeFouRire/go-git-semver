@@ -15,7 +15,7 @@ type bumper func(v semver.Version) semver.Version
 
 func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 
-	return func(*cobra.Command, []string) {
+	return func(cmd *cobra.Command, args []string) {
 		repo, err := git.PlainOpen(".")
 		if err != nil {
 			log.Fatal(err)
@@ -50,6 +50,19 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 			v = &tmpv
 		}
 		newVersion := bump(*v)
+		if prerelease != "" {
+			newVersion, err = newVersion.SetPrerelease(args[0])
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+		if meta != "" {
+			newVersion, err = newVersion.SetMetadata(meta)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
 		newTag := "v" + newVersion.String()
 		if nov {
 			newTag = newVersion.String()

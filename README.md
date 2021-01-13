@@ -4,6 +4,8 @@ Git-semver is a CLI tool for easy SemVer versioning of your tags.
 
 `go-git-semver help` returns usage information.
 
+`go-git-semver -v` prints go-git-semver's own version.
+
 `go-git-semver get` returns the latest semver tag.
 
 `go-git-semver patch` increments the patch number, `inc semver minor` and `inc semver major` increment the minor and major number.
@@ -14,7 +16,7 @@ Git-semver is a CLI tool for easy SemVer versioning of your tags.
 
 `go-git-semver patch --yes` removes interactive y/N confirmation and assumes yes.
 
-`go-git-semver prerelease rc1 -m "sounds about right"` creates a prerelease tag (`-rc1`) with a message (annotated tag)
+`go-git-semver patch --prerelease=rc1 -m "sounds about right"` creates a prerelease tag (`-rc1`) with a message (annotated tag)
 
 ## Download and Install as a git plugin
 
