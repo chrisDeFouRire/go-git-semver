@@ -25,7 +25,7 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if dirty && !quiet {
+		if dirty && !force {
 			log.Fatal("Directory is dirty, commit first")
 		}
 
@@ -39,6 +39,16 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 			log.Fatalf("No need to bump, tag %s applies to HEAD", tag)
 		}
 
+		if clear {
+			var tmpv semver.Version
+			if tmpv, err = v.SetPrerelease(""); err != nil {
+				log.Fatal(err)
+			}
+			if tmpv, err = v.SetMetadata(""); err != nil {
+				log.Fatal(err)
+			}
+			v = &tmpv
+		}
 		newVersion := bump(*v)
 		newTag := "v" + newVersion.String()
 		if nov {
@@ -57,7 +67,7 @@ func bumpRepoWithBumper(bump bumper) func(*cobra.Command, []string) {
 			}
 			fmt.Printf("Tagged %s with tag %s\n", ref.String(), newTag)
 		} else {
-			if !quiet {
+			if !force {
 				fmt.Println("Exit without tagging")
 			}
 			os.Exit(-1)

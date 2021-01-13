@@ -12,7 +12,7 @@ import (
 
 var (
 	cfgFile   string
-	quiet     bool
+	force     bool
 	assumeYes bool
 )
 
@@ -38,16 +38,9 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gitv.yaml)")
-	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet, don't warn if dirty folder")
+	rootCmd.PersistentFlags().BoolVarP(&force, "force", "f", false, "force tag, don't warn if dirty folder or already tagged")
 	rootCmd.Flags().BoolVarP(&assumeYes, "yes", "y", false, "Assume Yes answer")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.

@@ -5,6 +5,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var clear bool
+
 // patchCmd represents the patch command
 var patchCmd = &cobra.Command{
 	Use:   "patch",
@@ -26,4 +28,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// patchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	patchCmd.Flags().BoolVarP(&clear, "clear", "c", false, "Force clearing release and meta before incrementing version")
 }
