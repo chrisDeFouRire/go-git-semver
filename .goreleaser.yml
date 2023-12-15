@@ -12,19 +12,15 @@ builds:
     goos:
       - darwin
       - linux
-      - windows
     goarch:
-      - 386
+      - arm64
       - amd64
 
 archives:
   -
     replacements:
-      386: i386
+      arm64: arm64
       amd64: x86_64
-    format_overrides:
-      - goos: windows
-        format: zip
     files:
       - LICENSE
       - README.md
